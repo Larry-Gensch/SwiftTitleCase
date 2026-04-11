@@ -1,5 +1,5 @@
 //
-//  String+APADefinitions.swift
+//  String+TitleCase+APA.swift
 //  SwiftTitleCase
 //
 //  Created by Larry Gensch on 4/10/26.

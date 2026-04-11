@@ -4,6 +4,51 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com),
 and this project adheres to [Semantic Versioning](https://semver.or).
 
+## V0.4.0
+
+### Fixed
+
+- Ensure all existing tests run successfully
+- Ensure visibility of all methods works properly
+
+### CHANGED
+
+- Update CHANGELOG.md and README.md to show updated work
+
+## [Unreleased]
+
+### Fixed
+
+- Ensure all existing tests run successfully
+- Separated all Swift Tests by type to allow focusing on particular
+expectations easier.
+
+### Added
+
+- AP Style: Associated Press (original implementation)
+- APA Style: American Psychological Association
+- Chicago Style: Chicago Manual of Style (AKA CMS)
+- MLS Style: Modern Language Association
+- Each style has its own word list and options
+- Options: .firstLastCapitalized and .lowerCase3orLessCharacters
+- Add Locale support for various dialects of English
+- Always capitalize pronouns
+- Words less than four words are lower case (if style specifies it)
+- Support "modern" (Swift 5.7) `Regex` but fallback to original
+`NSRegularExpression` implementation for lower versions of Swift
+- Introduced two protocols (TitleCaseWordList and TitleCaseStyleType)
+- Moved TitleCaseStyle enumeration into String
+- Added support for specifying a "default" style when `titleCase(...)`
+is called without a specific style. (Still defaults to `.AP` if this
+new default call is not used.)
+- Added `String.titleCaseSetDefault(_style_, isGlobal: `Bool`) to set
+the default style.
+
+### Changed
+
+- All functions, methods, and properties (static) are within String
+extension
+
 ## [Unreleased]
 
 ### Fixed

@@ -1,5 +1,5 @@
 //
-//  String+APDefinitions.swift
+//  String+TitleCase+AP.swift
 //  SwiftTitleCase
 //
 //  Created by Larry Gensch on 4/10/26.

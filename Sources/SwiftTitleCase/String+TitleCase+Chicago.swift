@@ -1,5 +1,5 @@
 //
-//  String+ChicagoDefinitions.swift
+//  String+TitleCase+Chicago.swift
 //  SwiftTitleCase
 //
 //  Created by Larry Gensch on 4/10/26.

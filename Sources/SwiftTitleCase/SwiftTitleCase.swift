@@ -15,11 +15,20 @@
 import Foundation
 
 public extension String {
+    /// Styles that can be used for title case rules.
+    ///
+    /// Styles supported:
+    /// - `.AP` ( Associated Press), also `.ap`
+    /// - `.APA`( American Psychological Association), also: `.apa`
+    /// - `.Chicago` (Chicago Manual of Style), also: `.chicago`, `.CMS`, `.cms`
+    /// - `.MLA` (Modern Language Association), also: `.mla`
+    ///
     enum TitleCaseStyle: String {
-        case AP         // Associated Press
-        case APA        // American Psychological Association
-        case Chicago    // Chicago Manual of Style
-        case MLA        // Modern Language Association
+        /// Associated Press
+        case AP         /// Associated Press
+        case APA        /// American Psychological Association
+        case Chicago    /// Chicago Manual of Style
+        case MLA        /// Modern Language Association
         // TODO: Add more styles as needed.
 
         var lowercaseWords: Set<String> {
@@ -49,14 +58,22 @@ public extension String {
         }
 
         // For those that prefer lower-case enums cases:
-        static let ap = Self.AP
-        static let apa = Self.APA
-        static let chicago = Self.Chicago
-        static let mla = Self.MLA
 
-        // Chicago is also known as CMS (Chicago Manual of Style):
-        static let CMS = Self.Chicago
-        static let cms = Self.Chicago
+        /// Associated Press
+        public static let ap = Self.AP
+        /// American Psychological Association
+        public static let apa = Self.APA
+        /// Chicago Manual of Style
+        public static let chicago = Self.Chicago
+        /// Modern Language Association
+        public static let mla = Self.MLA
+
+        // Chicago is also known as CMS (Chicago Manual of Style)
+
+        /// Chicago Manual of Style
+        public static let CMS = Self.Chicago
+        /// Chicago Manual of Style
+        public static let cms = Self.Chicago
     }
 
     internal struct TitleStyleOptions: OptionSet {
@@ -74,7 +91,7 @@ public extension String {
     ///   - locale: The locale to use for capitalization. Use `nil` for current locale.
     ///
     /// - Returns: The title case string.
-    func titleCase(style: TitleCaseStyle? = nil,
+    func titleCase(style: TitleCaseStyle? = .ap,
                    preserveCase: Bool = true,
                    locale: Locale? = nil) -> String {
         let words = components(separatedBy: " ")
