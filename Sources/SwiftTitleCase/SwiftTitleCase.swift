@@ -14,166 +14,218 @@
 
 import Foundation
 
-public enum TitleCaseStyle {
-    case AP
-    // TODO: Add more styles as needed.
-}
-
 public extension String {
+    enum TitleCaseStyle: String {
+        case AP         // Associated Press
+        case APA        // American Psychological Association
+        case Chicago    // Chicago Manual of Style
+        case MLA        // Modern Language Association
+        // TODO: Add more styles as needed.
+
+        var lowercaseWords: Set<String> {
+            switch self {
+            case .AP:
+                String.AP.wordListSet
+            case .APA:
+                String.APA.wordListSet
+            case .Chicago:
+                String.Chicago.wordListSet
+            case .MLA:
+                String.MLA.wordListSet
+            }
+        }
+
+        var options: TitleStyleOptions {
+            switch self {
+            case .AP:
+                String.AP.options
+            case .APA:
+                String.APA.options
+            case .Chicago:
+                String.Chicago.options
+            case .MLA:
+                String.MLA.options
+            }
+        }
+
+        // For those that prefer lower-case enums cases:
+        static let ap = Self.AP
+        static let apa = Self.APA
+        static let chicago = Self.Chicago
+        static let mla = Self.MLA
+
+        // Chicago is also known as CMS (Chicago Manual of Style):
+        static let CMS = Self.Chicago
+        static let cms = Self.Chicago
+    }
+
+    internal struct TitleStyleOptions: OptionSet {
+        var rawValue: Int
+
+        static internal let firstLastCapitalized = Self(rawValue: 1 << 0)
+        static internal let lowerCase3orLessCharacters = Self(rawValue: 3 << 0)
+    }
+
     /// Converts a string to title case.
     ///
     /// - Parameters:
     ///   - style: The style of title case to use.
     ///   - preserveCase: Whether to preserve the existing capitalization of the words (except the first letter and lowercase words).
+    ///   - locale: The locale to use for capitalization. Use `nil` for current locale.
     ///
     /// - Returns: The title case string.
-    func titleCase(style _: TitleCaseStyle = .AP, preserveCase: Bool = true) -> String {
+    func titleCase(style: TitleCaseStyle? = nil,
+                   preserveCase: Bool = true,
+                   locale: Locale? = nil) -> String {
         let words = components(separatedBy: " ")
         guard !words.isEmpty else { return self }
+
+        let style = style ?? Self.defaultTitleCaseStyle
 
         let result = words.enumerated().map { index, word in
             guard !word.isEmpty else { return word }
 
             // Always capitalize first and last word
-            if index == 0 || index == words.count - 1 {
-                return capitalizeWord(word, preserveCase: preserveCase, beforeWord: index == 0 ? nil : words[index-1])
-            }
-            if lowercaseWords.contains(word.lowercased()) {
-                return word.lowercased()
+            if style.options.contains(.firstLastCapitalized),
+               index == 0 || index == words.count - 1 {
+                return capitalizeWord(
+                    word,
+                    style: style,
+                    preserveCase: preserveCase,
+                    beforeWord: index == 0 ? nil : words[index-1],
+                    isFirstOrLast: true,
+                    locale: locale
+                )
             }
 
-            return capitalizeWord(word, preserveCase: preserveCase, beforeWord: index == 0 ? nil : words[index-1])
+            if style.lowercaseWords.contains(word.lowercased(with: locale)) {
+                return word.lowercased(with: locale)
+            }
+
+            return capitalizeWord(word,
+                                  style: style,
+                                  preserveCase: preserveCase,
+                                  beforeWord: index == 0 ? nil : words[index-1],
+                                  locale: locale)
         }
 
         return result.joined(separator: " ")
     }
-}
 
-// TODO: These words are not just used as adjectives, so they should be context dependent but not implemented yet.
-private let lowercaseWords: Set<String> = [
-    "a",
-    "an",
-    "and",
-    "as",
-    "at",
-    "but",
-    "by",
-    "for",
-    "if",
-    "in",
-    "nor",
-    "of",
-    "off",
-    "on",
-    "or",
-    "per",
-    "so",
-    "the",
-    "to",
-    "up",
-    "via",
-    "yet",
-]
-
-fileprivate struct Transform {
-    let value: String
-    // Only transform if the word (lowercased) before is in this `beforeWords` set.
-    let beforeWords: Set<String>?
-
-    init(_ value: String, _ beforeWords: Set<String>? = nil) {
-        self.value = value
-        self.beforeWords = beforeWords
-    }
-}
-
-fileprivate let specialCaseWords: [String: Transform] = [
-    // Names
-    "mcdonald": .init("McDonald"),
-    // Products
-    "ipad": .init("iPad"),
-    "iphone": .init("iPhone"),
-    "ipod": .init("iPod"),
-    "imac": .init("iMac"),
-    "macbook": .init("MacBook"),
-    "ios": .init("iOS"),
-    "macos": .init("macOS"),
-    "watchos": .init("watchOS"),
-    "tvos": .init("tvOS"),
-    "visionos": .init("visionOS"),
-    "mini": .init("mini", ["mac", "ipad"]),
-    "linkedin": .init("LinkedIn"),
-    "youtube": .init("YouTube"),
-    // Programming
-    "html": .init("HTML"),
-    "css": .init("CSS"),
-    "javascript": .init("JavaScript"),
-    "typescript": .init("TypeScript"),
-]
-
-fileprivate func specialCased(_ word: String, beforeWord: String?) -> String? {
-    guard let specialCase = specialCaseWords[word.lowercased()] else {
-        return nil
-    }
-    if let beforeWords = specialCase.beforeWords {
-        guard let beforeLowercased = beforeWord?.lowercased() else {
+    private func specialCased(_ word: String,
+                              beforeWord: String?,
+                              isFirstOrLast: Bool,
+                              locale: Locale?) -> String? {
+        guard let specialCase = Self.SpecialCaseWords.wordList[word.lowercased(with: locale)] else {
             return nil
         }
-        if beforeWords.contains(beforeLowercased) {
+        if let beforeWords = specialCase.beforeWords {
+            guard let beforeLowercased = beforeWord?.lowercased(with: locale) else {
+                return nil
+            }
+            if beforeWords.contains(beforeLowercased) {
+                return specialCase.value
+            }
+            return nil
+        } else {
             return specialCase.value
         }
-        return nil
-    } else {
-        return specialCase.value
+    }
+
+    fileprivate func capitalizeWord(_ word: String,
+                                    style: TitleCaseStyle,
+                                    preserveCase: Bool,
+                                    beforeWord: String?,
+                                    isFirstOrLast: Bool = false,
+                                    locale: Locale?) -> String {
+        guard !word.isEmpty else { return word }
+
+        if word.contains("-") {
+            return word.components(separatedBy: "-")
+                .map { capitalizeWord($0,
+                                      style: style,
+                                      preserveCase: preserveCase,
+                                      beforeWord: beforeWord,
+                                      locale: locale) }
+                .joined(separator: "-")
+        }
+
+        // Capitalized pronouns
+        if Pronouns.wordListSet.contains(word.lowercased(with: locale)) {
+            return word.capitalized(preserveCase: preserveCase, locale: locale)
+        }
+
+        if !word.contains("'") && !word.contains("’") {
+            if let specialCase = specialCased(word,
+                                              beforeWord: beforeWord,
+                                              isFirstOrLast: isFirstOrLast,
+                                              locale: locale) {
+                return specialCase
+            } else {
+                if style.options.contains(.lowerCase3orLessCharacters),
+                   word.count < 3,
+                   !isFirstOrLast {
+                    return word.lowercased(preserveCase: preserveCase, locale: locale)
+                }
+                var result = word
+                let firstChar = result.removeFirst()
+                if preserveCase {
+                    return String(firstChar).uppercased(with: locale) + result
+                } else {
+                    return String(firstChar).uppercased(with: locale) + result.lowercased(with: locale)
+                }
+            }
+        }
+
+        // Original apostrophe code
+        var parts = Apostrophe.splitWithApostrophes(word)
+        for (index, part) in parts.enumerated() {
+            if let specialCase = specialCased(part,
+                                              beforeWord: beforeWord,
+                                              isFirstOrLast: isFirstOrLast,
+                                              locale: locale) {
+                parts[index] = specialCase
+            } else if index == 0 || part.count > 1 {
+                // Only apply if the apostrophe is near the start (like O'Neill, not McDonald's)
+                var part = part
+                let firstChar = part.removeFirst()
+                if preserveCase {
+                    parts[index] = String(firstChar).uppercased(with: locale) + part
+                } else {
+                    parts[index] = String(firstChar).uppercased(with: locale) + part.lowercased(with: locale)
+                }
+            }
+        }
+        return parts.joined()
+    }
+
+    internal func capitalized(preserveCase: Bool, locale: Locale?) -> String {
+        var string = self
+        if preserveCase {
+            let first = string.removeFirst()
+            return String(first).uppercased(with: locale) + string
+        }
+        else {
+            return string.capitalized(with: locale)
+        }
+    }
+
+    internal func lowercased(preserveCase: Bool, locale: Locale?) -> String {
+        var string = self
+        if preserveCase {
+            let first = string.removeFirst()
+            return String(first).lowercased(with: locale) + string
+        }
+        else {
+            return string.lowercased(with: locale)
+        }
     }
 }
 
-fileprivate func capitalizeWord(_ word: String, preserveCase: Bool, beforeWord: String?) -> String {
-    guard !word.isEmpty else { return word }
-
-    if word.contains("-") {
-        return word.components(separatedBy: "-")
-            .map { capitalizeWord($0, preserveCase: preserveCase, beforeWord: beforeWord) }
-            .joined(separator: "-")
-    }
-    if !word.contains("'") && !word.contains("’") {
-        if let specialCase = specialCased(word, beforeWord: beforeWord) {
-            return specialCase
-        } else {
-            var result = word
-            let firstChar = result.removeFirst()
-            if preserveCase {
-                return String(firstChar).uppercased() + result
-            } else {
-                return String(firstChar).uppercased() + result.lowercased()
-            }
-        }
-    }
-    var parts = splitWithApostrophes(word)
-    for (index, part) in parts.enumerated() {
-        if let specialCase = specialCased(part, beforeWord: beforeWord) {
-            parts[index] = specialCase
-        } else if index == 0 || part.count > 1 {
-            // Only apply if the apostrophe is near the start (like O'Neill, not McDonald's)
-            var part = part
-            let firstChar = part.removeFirst()
-            if preserveCase {
-                parts[index] = String(firstChar).uppercased() + part
-            } else {
-                parts[index] = String(firstChar).uppercased() + part.lowercased()
-            }
-        }
-    }
-    return parts.joined()
+internal protocol TitleCaseWordList {
+    static var wordListSet: Set<String> { get }
 }
 
-
-// Compiled once at module load; the pattern is a literal constant so force-try is safe.
-fileprivate let apostropheRegex = try! NSRegularExpression(pattern: "([^’’]+|[‘’])")
-
-fileprivate func splitWithApostrophes(_ input: String) -> [String] {
-    let matches = apostropheRegex.matches(in: input, range: NSRange(input.startIndex..., in: input))
-    return matches.compactMap { match in
-        guard let range = Range(match.range, in: input) else { return nil }
-        return String(input[range])
-    }
+internal protocol TitleCaseStyleType {
+    static var options: String.TitleStyleOptions { get }
 }
