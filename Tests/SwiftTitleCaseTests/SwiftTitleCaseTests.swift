@@ -96,4 +96,17 @@ struct TestTitleCase {
     func pronounTests() async throws {
         #expect("this is what he wanted".titleCase() == "This is What He Wanted")
     }
+
+    @Test("Chicago Style")
+    func chicagoTests() async throws {
+        #expect(
+            "under the sea".titleCase(
+                style: .Chicago,
+                preserveCase: false) == "Under the Sea"
+        )
+        #expect(
+            "that went under your head".titleCase(
+                style: .Chicago) == "That Went under Your Head"
+        )
+    }
 }

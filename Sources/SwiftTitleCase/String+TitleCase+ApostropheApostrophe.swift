@@ -26,7 +26,7 @@ internal extension String {
 
         // Uses iOS 16+ Swift.Regex
         @available(iOS 16.0, macOS 13.0, tvOS 16.0, watchOS 9.0, *)
-        static private let apostropheRegex = #/([^'’]+|['’])/#
+        static private let apostropheRegex = /([^'’]+|['’])/
 
         internal static func splitWithApostrophes(_ input: String) -> [String] {
             if #available(iOS 16.0, macOS 13.0, tvOS 16.0, watchOS 9.0, *) {
