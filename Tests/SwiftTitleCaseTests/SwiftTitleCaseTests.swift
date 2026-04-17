@@ -13,7 +13,7 @@
 // limitations under the License.
 
 import Testing
-@testable import SwiftTitleCase
+import SwiftTitleCase
 
 struct TestTitleCase {
     @Test("Basics")

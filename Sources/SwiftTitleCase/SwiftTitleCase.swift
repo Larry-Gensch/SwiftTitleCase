@@ -23,9 +23,9 @@ extension String {
     ///   - locale: The locale to use for capitalization. Use `nil` for current locale.
     ///
     /// - Returns: The title case string.
-    func titleCase(style: TitleCaseStyle? = .ap,
-                   preserveCase: Bool = true,
-                   locale: Locale? = nil) -> String {
+    public func titleCase(style: TitleCaseStyle? = .ap,
+                          preserveCase: Bool = true,
+                          locale: Locale? = nil) -> String {
         let words = components(separatedBy: " ")
         guard !words.isEmpty else { return self }
 
@@ -65,10 +65,10 @@ extension String {
         return result.joined(separator: " ")
     }
 
-    private func specialCased(_ word: String,
-                              beforeWord: String?,
-                              isFirstOrLast: Bool,
-                              locale: Locale?) -> String? {
+    internal func specialCased(_ word: String,
+                               beforeWord: String?,
+                               isFirstOrLast: Bool,
+                               locale: Locale?) -> String? {
         guard let specialCase = Self.SpecialCaseWords.wordList[word.lowercased(with: locale)] else {
             return nil
         }
@@ -85,12 +85,12 @@ extension String {
         }
     }
 
-    fileprivate func capitalizeWord(_ word: String,
-                                    style: TitleCaseStyle,
-                                    preserveCase: Bool,
-                                    beforeWord: String?,
-                                    isFirstOrLast: Bool = false,
-                                    locale: Locale?) -> String {
+    internal func capitalizeWord(_ word: String,
+                                 style: TitleCaseStyle,
+                                 preserveCase: Bool,
+                                 beforeWord: String?,
+                                 isFirstOrLast: Bool = false,
+                                 locale: Locale?) -> String {
         guard !word.isEmpty else { return word }
 
         if word.contains("-") {
