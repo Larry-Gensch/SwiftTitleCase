@@ -18,55 +18,47 @@ import Foundation
 
 internal extension String {
     enum Chicago: TitleCaseWordList , TitleCaseStyleType {
+        static let prepositionsRange: any RangeExpression<Int> = 1...4
+
         static let options: String.TitleStyleOptions = [
-            .firstLastCapitalized,
-            .lowerCase3orLessCharacters
+            .firstAndLastCapitalized,
+            .lowerCase3orLessCharacters,
+            .useLessCommonPrepositions,
         ]
 
         internal static var wordListSet: Set<String> = [
-            "about",    // Preposition
-            "above",    // Preposition
             "a",        // Article
-            "about",    // Preposition
-            "above",    // Preposition
-            "across",   // Preposition
-            "after",    // Preposition
-            "against",  // Preposition
-            "among",    // Preposition
             "an",       // Article
             "and",      // Conjunction
-            "around",   // Preposition
-            "at",       // Preposition
-            "before",   // Preposition
-            "behind",   // Preposition
-            "below",    // Preposition
-            "beside",   // Preposition
-            "between",  // Preposition
             "but",      // Conjunction
-            "by",       // Preposition
-            "down",     // Preposition
-            "during",   // Preposition
             "for",      // Conjunction, Preposition
-            "from",     // Preposition
-            "in",       // Preposition
-            "inside",   // Preposition
-            "into",     // Preposition
-            "near",     // Preposition
             "nor",      // Conjunction
-            "of",       // Preposition
-            "off",      // Preposition
-            "on",       // Preposition
             "or",       // Conjunction
-            "out",      // Preposition
-            "over",     // Preposition
             "so",       // Conjunction
             "the",      // Article
-            "through",  // Preposition
-            "to",       // Preposition
-            "toward",   // Preposition
-            "under",    // Preposition
-            "up",       // Preposition
-            "with",     // Preposition
+            "yet",      // Conjunction
+        ]
+    }
+
+    enum Chicago17: TitleCaseWordList , TitleCaseStyleType {
+        static let prepositionsRange: any RangeExpression<Int> = 1...
+
+        static let options: String.TitleStyleOptions = [
+            .firstAndLastCapitalized,
+            .lowerCase3orLessCharacters,
+            .useLessCommonPrepositions,
+        ]
+
+        internal static var wordListSet: Set<String> = [
+            "a",        // Article
+            "an",       // Article
+            "and",      // Conjunction
+            "but",      // Conjunction
+            "for",      // Conjunction, Preposition
+            "nor",      // Conjunction
+            "or",       // Conjunction
+            "so",       // Conjunction
+            "the",      // Article
             "yet",      // Conjunction
         ]
     }

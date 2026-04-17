@@ -10,8 +10,10 @@ import Foundation
 internal extension String {
     /// AP Style specifics
     enum AP: TitleCaseWordList, TitleCaseStyleType {
+        static let prepositionsRange: any RangeExpression<Int> = 1...3
+
         static let options: String.TitleStyleOptions = [
-            .firstLastCapitalized,
+            .firstAndLastCapitalized,
             .lowerCase3orLessCharacters
         ]
 
@@ -20,8 +22,6 @@ internal extension String {
             "a",
             "an",
             "and",
-            "as",
-            "at",
             "but",
             "by",
             "for",

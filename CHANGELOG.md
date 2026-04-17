@@ -4,6 +4,23 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com),
 and this project adheres to [Semantic Versioning](https://semver.or).
 
+## V0.4.2
+
+### Changed:
+
+- Separate .Chicago into .Chicago17 (Version 17) and .Chicago (Version 18+)
+- Do some refactoring of word lists and prepositions
+- Added tests for MLA, Chicago, and Chicago17
+
+## V0.4.1
+
+### Added
+- Allow "experimental" "bare slash regex literals"
+- Add tests for Chicago style (longer prepositions lowercased)
+
+### Fixed:
+- Change packaging version to 5.10
+
 ## V0.4.0
 
 ### Fixed

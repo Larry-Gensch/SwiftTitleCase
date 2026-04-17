@@ -14,75 +14,7 @@
 
 import Foundation
 
-public extension String {
-    /// Styles that can be used for title case rules.
-    ///
-    /// Styles supported:
-    /// - `.AP` ( Associated Press), also `.ap`
-    /// - `.APA`( American Psychological Association), also: `.apa`
-    /// - `.Chicago` (Chicago Manual of Style), also: `.chicago`, `.CMS`, `.cms`
-    /// - `.MLA` (Modern Language Association), also: `.mla`
-    ///
-    enum TitleCaseStyle: String {
-        /// Associated Press
-        case AP         /// Associated Press
-        case APA        /// American Psychological Association
-        case Chicago    /// Chicago Manual of Style
-        case MLA        /// Modern Language Association
-        // TODO: Add more styles as needed.
-
-        var lowercaseWords: Set<String> {
-            switch self {
-            case .AP:
-                String.AP.wordListSet
-            case .APA:
-                String.APA.wordListSet
-            case .Chicago:
-                String.Chicago.wordListSet
-            case .MLA:
-                String.MLA.wordListSet
-            }
-        }
-
-        var options: TitleStyleOptions {
-            switch self {
-            case .AP:
-                String.AP.options
-            case .APA:
-                String.APA.options
-            case .Chicago:
-                String.Chicago.options
-            case .MLA:
-                String.MLA.options
-            }
-        }
-
-        // For those that prefer lower-case enums cases:
-
-        /// Associated Press
-        public static let ap = Self.AP
-        /// American Psychological Association
-        public static let apa = Self.APA
-        /// Chicago Manual of Style
-        public static let chicago = Self.Chicago
-        /// Modern Language Association
-        public static let mla = Self.MLA
-
-        // Chicago is also known as CMS (Chicago Manual of Style)
-
-        /// Chicago Manual of Style
-        public static let CMS = Self.Chicago
-        /// Chicago Manual of Style
-        public static let cms = Self.Chicago
-    }
-
-    internal struct TitleStyleOptions: OptionSet {
-        var rawValue: Int
-
-        static internal let firstLastCapitalized = Self(rawValue: 1 << 0)
-        static internal let lowerCase3orLessCharacters = Self(rawValue: 3 << 0)
-    }
-
+extension String {
     /// Converts a string to title case.
     ///
     /// - Parameters:
@@ -103,7 +35,7 @@ public extension String {
             guard !word.isEmpty else { return word }
 
             // Always capitalize first and last word
-            if style.options.contains(.firstLastCapitalized),
+            if style.options.contains(.firstAndLastCapitalized),
                index == 0 || index == words.count - 1 {
                 return capitalizeWord(
                     word,
@@ -116,6 +48,10 @@ public extension String {
             }
 
             if style.lowercaseWords.contains(word.lowercased(with: locale)) {
+                return word.lowercased(with: locale)
+            }
+
+            if style.prepositions.contains(word.lowercased(with: locale)) {
                 return word.lowercased(with: locale)
             }
 
@@ -237,12 +173,4 @@ public extension String {
             return string.lowercased(with: locale)
         }
     }
-}
-
-internal protocol TitleCaseWordList {
-    static var wordListSet: Set<String> { get }
-}
-
-internal protocol TitleCaseStyleType {
-    static var options: String.TitleStyleOptions { get }
 }

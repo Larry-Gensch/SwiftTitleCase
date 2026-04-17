@@ -16,8 +16,10 @@ import Foundation
 
 internal extension String {
     enum APA: TitleCaseWordList, TitleCaseStyleType {
+        static let prepositionsRange: any RangeExpression<Int> = 1...3
+
         static let options: String.TitleStyleOptions = [
-            .firstLastCapitalized,
+            .firstAndLastCapitalized,
             .lowerCase3orLessCharacters
         ]
 
@@ -26,24 +28,13 @@ internal extension String {
             "an",   // article
             "and",  // conjunction
             "as",   // conjunction
-            "as",   // short preposition
-            "at",   // short preposition
             "but",  // conjunction
-            "by",   // short preposition
             "for",  // conjunction, short preposition
             "if",   // conjunction
-            "in",   // short preposition
             "nor",  // conjunction
-            "of",   // short preposition
-            "off",  // short preposition
-            "on",   // short preposition
             "or",   // conjunction
-            "per",  // short preposition
             "so",   // conjunction
             "the",  // article
-            "to",   // short preposition
-            "up",   // short preposition
-            "via",  // short preposition
             "yet",  // conjunction
         ]
     }

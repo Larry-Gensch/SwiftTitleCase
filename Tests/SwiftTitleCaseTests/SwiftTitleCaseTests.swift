@@ -97,7 +97,7 @@ struct TestTitleCase {
         #expect("this is what he wanted".titleCase() == "This is What He Wanted")
     }
 
-    @Test("Chicago Style")
+    @Test("Chicago Styles")
     func chicagoTests() async throws {
         #expect(
             "under the sea".titleCase(
@@ -106,7 +106,34 @@ struct TestTitleCase {
         )
         #expect(
             "that went under your head".titleCase(
-                style: .Chicago) == "That Went under Your Head"
+                style: .Chicago) == "That Went Under Your Head"
+        )
+        #expect(
+            "he went down the river".titleCase(
+                style: .Chicago) == "He Went down the River"
+            )
+        #expect(
+            "that went under your head".titleCase(style: .Chicago17) == "That Went under Your Head"
+            )
+        #expect(
+            "that went in your head".titleCase(style: .Chicago17) == "That Went in Your Head"
+        )
+    }
+
+    @Test("MLA Style")
+    func mlaTests() async throws {
+        #expect(
+            "under the sea".titleCase(
+                style: .MLA,
+                preserveCase: false) == "Under the Sea"
+        )
+        #expect(
+            "that went under your head".titleCase(
+                style: .MLA) == "That Went under Your Head"
+        )
+        #expect(
+            "that went in your head".titleCase(
+                style: .MLA) == "That Went in Your Head"
         )
     }
 }
