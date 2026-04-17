@@ -12,6 +12,7 @@ extension String {
         static let defaultsKey = "SwiftTitleCase.defaultTitleCaseStyle"
         static let noDefault = TitleCaseStyle.AP
     }
+
     private static var singleRunTitleCaseStyle: TitleCaseStyle? = nil
 
     internal static var defaultTitleCaseStyle: TitleCaseStyle {
@@ -19,13 +20,10 @@ extension String {
             if let storedValue = UserDefaults.standard.string(
                 forKey: C.defaultsKey
             ) {
-                TitleCaseStyle(rawValue: storedValue) ?? C.noDefault
-            }
-            else if let singleRunTitleCaseStyle {
-                singleRunTitleCaseStyle
+                TitleCaseStyle(rawValue: storedValue) ?? singleRunTitleCaseStyle ?? C.noDefault
             }
             else {
-                C.noDefault
+                singleRunTitleCaseStyle ?? C.noDefault
             }
         }
         set {
@@ -42,8 +40,8 @@ extension String {
     ///   false if the default is to be for the lifetime of the current app only.
     ///
     /// The order in which the default is determined is as follows:
-    /// 1. Local value (`isGlobal` == `false`), if set. Otherwise...
-    /// 2. Global value (`isGlobal` == `true`), if set. Otherwise...
+    /// 1. Global value (`isGlobal` == `true`), if set. Otherwise...
+    /// 2. Local value (`isGlobal` == `false`), if set. Otherwise...
     /// 3. `.AP` style (traditional)
     ///
     /// The Global value uses `UserDefaults` to ensure the value is remembered between

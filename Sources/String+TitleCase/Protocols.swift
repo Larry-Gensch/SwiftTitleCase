@@ -7,6 +7,8 @@
 
 import Foundation
 
+// Internal protocols, used for the internal implementation of this package.
+
 internal protocol TitleCaseWordList {
     static var wordListSet: Set<String> { get }
 }

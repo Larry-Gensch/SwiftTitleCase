@@ -38,7 +38,8 @@ Contributions welcome!
 | :---- | :------------ |
 | AP      | Associated Press |
 | APA     | American Psychological Association |
-| Chicago | Chicago Manual of Style |
+| Chicago | Chicago Manual of Style (version 18+) |
+| Chicago17 | Chicago Manual of Style (version 17) |
 | MLA     | Modern Language Association |
 
 The guides for the implementation of these styles were
@@ -56,11 +57,11 @@ func titleCase(
 ```
 
 **Parameters:**
-- style<br>
+- `style`<br>
 The style of title case to use. If `nil,` use the default style (see below).
-- preserveCase<br>
+- `preserveCase`<br>
 Whether to preserve the existing capitalization of the words (except the first letter and lowercase words).
-- locale<br>
+- `locale`<br>
 The locale to use for capitalization. Use nil for current locale.
 
 **Returns:**<br>
@@ -81,24 +82,31 @@ will continue to be the `.AP` style, for compatibility with previous versions of
 
 **Parameters:**
 
-- style<br>
+- `style`<br>
 The default to use when no style is provided to the `titleCase()` function. If you set this to `nil`, it till remove
-either the global or local default. Setting both to `nil` will cause the  
+either the global or local default. Setting both to `nil` will cause the app to fallback to the AP style.
 
-- isGlobal<br>
+- `isGlobal`<br>
 `true` if the default is to be remembered between app runs, or
 `false` if the default is to be for the lifetime of the current app only.
 
 The order in which the default is determined is as follows:
-1. Local value (`isGlobal` == `false`), if set. Otherwise...
-2. Global value (`isGlobal` == `true`), if set. Otherwise...
-3. `.AP` style (if this method is never called)
+1. Global value (`isGlobal` == `true`), if set. Otherwise...
+2. Local value (`isGlobal` == `false`), if set. Otherwise...
+3. `.AP` style (if this method is never called, or both the local and global style has been set to `nil`).
 
-The Global value uses the standard `UserDefaults` to ensure the value is remembered between
+The global value uses the standard `UserDefaults` to ensure the value is remembered between
 app runs.
 
-You would use `isGlobal: true` once (unless you wish to reset it via a **Settings** feature within your app. That lets you allow the user to decide
-which style guide to use.
+### Local versus Global
+
+The local setting (`isGlobal` == `false`) is useful for specifying an app-specific setting for the style used for calls to
+the `titleCase(...)` function, and you should ensure that you specify this at every app startup.
+
+The global setting (`isGlobal` == `true`) is useful when allowing the user, rather than the app,
+specify the desired style guide.
+
+You can also use both to have the user specify a style, but fall back to an app-preferred style if no user style is set.
 
 ## Changelog
 

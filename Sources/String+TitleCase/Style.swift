@@ -22,7 +22,8 @@ public extension String {
         case Chicago17  /// Chicago Manual of Style, version 17
         case Chicago    /// Chicago Manual of Style, version 18
         case MLA        /// Modern Language Association
-                        // TODO: Add more styles as needed.
+
+        //TODO: Add more styles as needed (e.g., bluebook, AMA...)
 
         var lowercaseWords: Set<String> {
             switch self {
@@ -87,22 +88,30 @@ public extension String {
             }
         }
 
-        // For those that prefer lower-case enums cases:
+        // For those that prefer to use alternate enumerations:
 
         /// Associated Press
         public static let ap = Self.AP
         /// American Psychological Association
+        ///
         public static let apa = Self.APA
-        /// Chicago Manual of Style
+        /// Chicago Manual of Style (version 18)
+        ///
         public static let chicago = Self.Chicago
-        /// Modern Language Association
-        public static let mla = Self.MLA
+        /// Chicago Manual of Style (version 17)
+        public static let chicago17 = Self.Chicago17
 
         // Chicago is also known as CMS (Chicago Manual of Style)
-
-        /// Chicago Manual of Style
+        /// Chicago Manual of Style (version 18+)
         public static let CMS = Self.Chicago
-        /// Chicago Manual of Style
+        /// Chicago Manual of Style (version 18+)
         public static let cms = Self.Chicago
+        /// Chicago Manual of Style (version 17)
+        public static let CMS17 = Self.Chicago17
+        /// Chicago Manual of Style (version 17)
+        public static let cms17 = Self.Chicago17
+
+        /// Modern Language Association
+        public static let mla = Self.MLA
     }
 }
